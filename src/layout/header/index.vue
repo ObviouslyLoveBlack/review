@@ -131,15 +131,14 @@ body {
   top: 3.625rem;
   left: 0px;
   ul {
-    box-sizing: border-box;
     padding-top: 20px;
-    overflow: hidden;
     li {
       padding: 0px 1.25rem;
       width: 100%;
+      box-sizing: border-box;
       a {
         display: inline-block;
-        width: calc(100% - 40px);
+        width: 100%;
         padding: 16px 0px;
         border-bottom: 1px solid #d9d9d9;
         font-size: 14px;
