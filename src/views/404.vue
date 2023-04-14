@@ -1,11 +1,11 @@
 <template>
-  <div>
-    我的
-  </div>
+  <div>404</div>
 </template>
 
-<script setup>
+<script>
+export default {
 
+}
 </script>
 
 <style>

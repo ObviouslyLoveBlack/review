@@ -2,7 +2,8 @@ import {routes} from "@/router/index";
 
 function filterMapRoutes(data){
   let routeMenu = []
-  routeMenu = data.map((v)=>({
+  const menu = data[0].children.filter(v=> !v.hiden)
+  routeMenu = menu.map((v)=>({
     path:v.path,
     title:v.meta.title
   }))
@@ -12,11 +13,15 @@ function filterMapRoutes(data){
 export default {
     namespaced: true,
     state: {
-        nav: []
+        nav: [],
+        activeNav:''
     },
     mutations: {
         SET_ROUTES: (state, payload) => {
             state.nav = payload
+        },
+        SET_ACTIVE:(state,payload)=>{
+            state.activeNav = payload
         }
     },
     actions: {

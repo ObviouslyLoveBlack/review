@@ -1,59 +1,105 @@
 <template>
-  <van-swipe class="my-swipe" :autoplay="4000" indicator-color="white">
-    <van-swipe-item>1</van-swipe-item>
-    <van-swipe-item>2</van-swipe-item>
-    <van-swipe-item>3</van-swipe-item>
-    <van-swipe-item>4</van-swipe-item>
-  </van-swipe>
-  <view class="two-swipe">
-    <van-swipe class="my-swipe" :autoplay="2000" indicator-color="white">
-      <van-swipe-item>1</van-swipe-item>
-      <van-swipe-item>2</van-swipe-item>
-      <van-swipe-item>3</van-swipe-item>
-      <van-swipe-item>4</van-swipe-item>
-      <template #indicator="{ active, total }">
-        <div class="custom-indicator">{{ active + 1 }}/{{ total }}</div>
-      </template>
-    </van-swipe>
-  </view>
+  <div class="home-partner">
+    <h1>让车成为有生命的人类伙伴</h1>
+  </div>
+  <div class="home-solution">
+    <img src="@/assets/home/2.jpg" alt="" />
+    <h1>零束银河全栈技术解决方案</h1>
+  </div>
+  <div class="function-box">
+    <div class="function-item" v-for="(action,index) in list" :key="index" :style="{backgroundImage:`url(${action.imageUrl})`}">
+      <div class="function-detail">
+        <h2>{{action.title}}</h2>
+        <p class="detail-intro">{{action.content}}</p>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import { getUserInfo } from "@/api/tool.js";
-import { onMounted } from "vue";
-function UserInfo() {
-  getUserInfo().then((res) => {
-    console.log(res);
-    // obj = res.data
-  });
+import {getDetailIntro} from '@/api/home.js'
+import {onMounted,ref} from 'vue'
+let list = ref([])
+function detailIntro(){
+   getDetailIntro().then(res=>{
+      list.value = res.data
+   })
 }
-onMounted(() => {
-  UserInfo();
-});
+onMounted(()=>{
+   detailIntro()
+})
 </script>
 <style lang="scss" scoped>
-.two-swipe {
-  border-top: 1px solid #eaeaea;
+* {
+  margin: 0px;
+  padding: 0px;
 }
-.my-swipe {
-  &:last-child {
-    border-top: 0.0625rem solid #eaeaea;
+.home-partner,
+.home-solution {
+  width: 23.4375rem;
+  height: 16.875rem;
+  position: relative;
+  background-image: url("@/assets/home/1.gif");
+  background-position: 42% 62%;
+  background-size: 120%;
+  img {
+    width: 100%;
+    height: 100%;
+    object-position: 100% 100%;
   }
-  .van-swipe-item {
+  h1 {
+    width: 100%;
+    // height: 2rem;
+    font-size: 1.55rem;
     color: #fff;
-    font-size: 20px;
-    line-height: 150px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%);
     text-align: center;
-    background-color: #39a9ed;
   }
 }
-
-.custom-indicator {
-  position: absolute;
-  right: 5px;
-  bottom: 5px;
-  padding: 2px 5px;
-  font-size: 12px;
-  background: rgba(0, 0, 0, 0.1);
+.home-solution {
+  background-image: none;
+  h1 {
+    color: #000;
+  }
+}
+.function-box {
+  width: 100%;
+  .function-item {
+    width: 23.4375rem;
+    height: 378px;
+    position: relative;
+    background-position: 42% 100%;
+    background-size: 100%;
+    &:nth-child(2n){
+      .function-detail{
+         color: #434343;
+      }
+    }
+    img {
+      width: 100%;
+      height: 100%;
+    }
+    .function-detail {
+     position: absolute;
+     top: 0px;
+     left: 0px;
+     padding: 30px 37px;
+     color: #fff;
+     h2{
+      font-size: 27px;
+      font-weight: 300;
+     }
+     p{
+      margin-top: 20px;
+      font-size: 13px;
+      line-height: 22px;
+     }
+    }
+  }
 }
 </style>

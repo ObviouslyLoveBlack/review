@@ -1,66 +1,65 @@
 <template>
-  <div class="regular" :class="navShow ? 'cover' : ''">
-    <div class="head-style">
-      <font-awesome-icon
-        :icon="isIcon ? 'bars' : 'times'"
-        class="icon"
-        @click="changeIcon"
-      />
-      <img src="../../assets/logo.png" alt="零束" />
+  <div>
+    <div class="regular">
+      <div class="head-style">
+        <font-awesome-icon
+          :icon="isIcon ? 'bars' : 'times'"
+          class="icon"
+          @click="changeIcon"
+        />
+        <img src="../../assets/logo.png" alt="零束" />
+      </div>
     </div>
+    <van-popup v-model:show="navShow" position="left">
+      <view
+        class="nav-style"
+        :class="navShow ? 'tl-show' : ''"
+      >
+        <ul>
+          <li
+            v-for="(action, index) in menuList"
+            :key="index"
+            :class="active === action.path ? 'active' : ''"
+            @click="nav(action)"
+          >
+            <a href="javascript:;">{{ action.title }}</a>
+          </li>
+        </ul>
+      </view>
+    </van-popup>
+    <!-- <transition v-if="false" name="nav-animate" appear> </transition> -->
   </div>
-  <van-popup
-    v-model:show="navShow"
-    overlay-class="overlay"
-    position="left"
-    :style="{ height: '100%', width: '70%' }"
-  />
-  <transition v-if="false" name="nav-animate" appear>
-    <view class="nav-style" v-show="navShow" :class="navShow ? 'tl-show' : ''">
-      <ul>
-        <li
-          v-for="(action, index) in routerNav"
-          :key="index"
-          @click="nav(action)"
-        >
-          <a href="javascript:;">{{ action.title }}</a>
-        </li>
-        <!-- <li><a href="javascript:;">首页</a></li>
-        <li><a href="javascript:;">关于零束</a></li>
-        <li><a href="javascript:;">产品与解决方案</a></li>
-        <li><a href="javascript:;">开发者中心</a></li>
-        <li><a href="javascript:;">开发者大会</a></li>
-        <li><a href="javascript:;">加入我们</a></li> -->
-      </ul>
-    </view>
-  </transition>
 </template>
 
 <script setup>
-import { setShade } from "@/utils/tool";
-import { ref, reactive, onMounted, computed, toRaw, onUpdated } from "vue";
+import {
+  ref,
+  reactive,
+  onMounted,
+  computed,
+  toRaw,
+  onUpdated,
+  watch,
+  watchEffect,
+} from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
-import $ from "jquery";
 let isIcon = ref(true);
 let navShow = ref(false);
 let menuList = ref([]);
 let toHeight = ref(0);
+let active = ref('')
 const store = useStore();
 const route = useRoute();
 const router = useRouter();
-const routerNav = store.getters.routerNav;
+const { routerNav } = store.getters;
 const changeIcon = () => {
-  isIcon.value = !isIcon.value;
+  isIcon.value = false;
   navShow.value = !navShow.value;
-  // setShade()
-  // if(navShow.value){
-  //   toHeight.value = $(window).scrollTop();
-  //   move()
-  // } else {
-  //  remove(toHeight.value)
-  // }
 };
+const getActiveNav = computed(() => {
+  return store.getters.activeNav;
+});
 const nav = (action) => {
   router.push({
     path: toRaw(action).path,
@@ -69,49 +68,25 @@ const nav = (action) => {
   isIcon.value = true;
 };
 onUpdated(() => {
-  console.log(3);
-  // menuList.value = JSON.parse(localStorage.getItem('navRouters'))
-  // console.log(menuList.value);
-  // console.log(routerNav);
+  menuList.value = toRaw(routerNav);
 });
-function move() {
-  $("html,body").css({
-    position: "fixed",
-    top: -scroll,
-  });
-}
-function remove(scroll) {
-  $("html,body").css({
-    position: "static",
-  });
-  $(window).scrollTop(scroll);
-  window.scrollTo({
-    top: scroll,
-    behavior: "smooth",
-  });
-}
+const close =((e)=>{
+  console.log(e);
+})
+watch(
+  [getActiveNav,navShow],
+  (newVal, oldVal) => {
+    active.value = newVal[0]
+    isIcon.value = !newVal[1]
+  },
+  { immediate: true, deep: true }
+);
 </script>
-
 <style lang="scss" scoped>
-/v-deep/ {
-  .van-popup--left {
-    top: 4.25rem;
-    height: 70% !important;
-  }
-  .van-overlay {
-    position: fixed;
-    top: 4.25rem !important;
-    left: 0;
-    width: 10%;
-    height: 10%;
-    z-index: 8 !important;
-  }
-}
 .regular {
   width: 100%;
-  height: 100%;
   position: fixed;
-  z-index: 9;
+  z-index: 100;
   .head-style {
     display: flex;
     height: 4.25rem;
@@ -120,7 +95,6 @@ function remove(scroll) {
     box-sizing: border-box;
     border-bottom: 1px solid #eaeaea;
     background: #fff;
-    // position: relative;
     .icon {
       position: absolute;
       top: 1.4375rem;
@@ -134,27 +108,35 @@ function remove(scroll) {
     }
   }
 }
+:deep(.van-popup) {
+  width: 80% !important;
+  height: 100% !important;
+  z-index: 99 !important;
+  top: 52% !important;
+  border-bottom: 1px solid #eaeaea;
+}
 
+:deep(.van-overlay) {
+  z-index: 99 !important;
+  top: 4.25rem;
+}
 html,
 body {
   position: relative;
 }
 .nav-style {
-  width: 80%;
-  height: calc(100% - 4.25rem + 1px);
+  width: 100%;
   background: #fff;
-  z-index: 999;
-  position: fixed;
-  top: 4.25rem;
+  position: absolute;
+  top: 3.625rem;
   left: 0px;
   ul {
     box-sizing: border-box;
     padding-top: 20px;
     overflow: hidden;
     li {
-      padding: 0px 20px;
+      padding: 0px 1.25rem;
       width: 100%;
-      // background: #4867FF;
       a {
         display: inline-block;
         width: calc(100% - 40px);
@@ -165,9 +147,6 @@ body {
       }
     }
   }
-}
-.tl-show {
-  overflow: hidden;
 }
 .nav-animate-enter-active {
   animation: anim linear 0.3s;
@@ -203,4 +182,18 @@ body {
 //   .nav-animate-leave{
 //     transform: translateX(0);
 //   }
+</style>
+// <style lang="scss">
+//   .van-overlay {
+//     position: fixed;
+//     top: 4.25rem !important;
+//     left: 0;
+//     width: 10%;
+//     height: 10%;
+//     z-index: 8 !important;
+//   }
+//   .van-popup--left{
+//     top: 60% !important;
+//   }
+//
 </style>

@@ -12,12 +12,11 @@ router.beforeEach(async (to, from, next) => {
         setDocumentTitle(to.meta.title)
     const menu = store.getters.routerNav
     if (menu.length > 0) {
-        console.log(1);
+        store.commit('navs/SET_ACTIVE',to.path)
         next()
     } else {
         try {
-            console.log(2);
-            let navRouters = await store.dispatch('routes/NavRouter')
+            let navRouters = await store.dispatch('navs/NavRouter')
             // localStorage.setItem('navRouters',JSON.stringify(toRaw(navRouters)))
             next({ ...to, replace: true,})
         } catch (error) {

@@ -30,6 +30,7 @@
 <script setup>
 import { getUserInfo } from "@/api/tool.js";
 import { onMounted, ref } from "vue";
+import $ from "jquery";
 let show = ref(false);
 const showPopup = () => {
   show.value = true;
@@ -42,6 +43,22 @@ function UserInfo() {
 onMounted(() => {
   // UserInfo();
 });
+function move() {
+  $("html,body").css({
+    position: "fixed",
+    top: -scroll,
+  });
+}
+function remove(scroll) {
+  $("html,body").css({
+    position: "static",
+  });
+  $(window).scrollTop(scroll);
+  window.scrollTo({
+    top: scroll,
+    behavior: "smooth",
+  });
+}
 </script>
 <style lang="scss" scoped>
 .two-swipe {

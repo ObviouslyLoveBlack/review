@@ -1,15 +1,15 @@
 <template>
-  <view class="style-content">
-   <view class="style-head">
-    <Header></Header>
-  </view>
-  <view class="style-main">
-    <router-view />
-  </view>
-  <view class="style-footer">
-    <Footer></Footer>
-  </view>
-  </view>
+  <div class="style-content">
+    <div class="style-head">
+      <Header></Header>
+    </div>
+    <div class="style-main">
+      <router-view />
+    </div>
+    <div class="style-footer">
+      <Footer></Footer>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -18,18 +18,16 @@ import Footer from "@/layout/footer/index.vue";
 </script>
 
 <style lang="scss" scoped>
-.style-content{
-   display: flex;
-   flex-direction: column;
-   .style-head{
-    // position: sticky;
-    // top: 0;
-      width: 100%;
-      height: 4.25rem;
-      z-index: 9;
-   }
-   .style-main{
-      flex-grow: 1;
-   }
+.style-content {
+  display: flex;
+  flex-direction: column;
+  .style-head {
+    width: 100%;
+    height: 4.25rem;
+    z-index: 100 !important;
+  }
+  .style-main {
+    flex-grow: 1;
+  }
 }
 </style>
